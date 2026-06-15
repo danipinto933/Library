@@ -8,12 +8,12 @@ services:
       - "8080:8080"
     environment:
       - DB_URL=jdbc:postgresql://db:5432/library
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=Dan!2025F5
-      - IMAGE_PATH=/app/uploads/covers/
-      - FRONTEND_URL=http://localhost:5173
-      - APP_FRONTEND_URL=http://localhost:5173
-      - JWT_SECRET=pu20$$pru&n29jsudhg24t23.1u3en$$&unspdfh2$$p39u&fn3pu4n.14$$$$3314
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - IMAGE_PATH=${IMAGE_PATH}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - APP_FRONTEND_URL=${APP_FRONTEND_URL}
+      - JWT_SECRET=${JWT_SECRET}
     restart: always
     depends_on:
       db:
@@ -27,8 +27,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Dan!2025F5
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: library
     restart: always
     healthcheck:
@@ -47,8 +47,8 @@ services:
     ports:
       - "5173:5173" 
     environment:
-      - VITE_API_URL=http://localhost:8080/api/v1/
-      - VITE_COVERS_URL=http://localhost:8080/uploads/covers/
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_COVERS_URL=${VITE_COVERS_URL}
     volumes:
       - ./library-F5/frontend:/app 
       - /app/node_modules

@@ -1,0 +1,60 @@
+services:
+  fullstackbackend:
+    build:
+      context: ./library-F5/backend
+      dockerfile: ../../Dockerfile.backend
+    container_name: library-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://db:5432/library
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=Dan!2025F5
+      - IMAGE_PATH=/app/uploads/covers/
+      - FRONTEND_URL=http://localhost:5173
+      - APP_FRONTEND_URL=http://localhost:5173
+      - JWT_SECRET=pu20$$pru&n29jsudhg24t23.1u3en$$&unspdfh2$$p39u&fn3pu4n.14$$$$3314
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./library-F5/backend/uploads:/app/uploads
+
+  db:
+    image: postgres:15-alpine
+    container_name: library-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Dan!2025F5
+      POSTGRES_DB: library
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d library"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    build: 
+      context: ./library-F5/frontend 
+      dockerfile: ../../Dockerfile.frontend
+    container_name: library-frontend
+    ports:
+      - "5173:5173" 
+    environment:
+      - VITE_API_URL=http://localhost:8080/api/v1/
+      - VITE_COVERS_URL=http://localhost:8080/uploads/covers/
+    volumes:
+      - ./library-F5/frontend:/app 
+      - /app/node_modules
+    restart: always
+    depends_on:
+      - fullstackbackend
+
+volumes:
+  postgres_data:

@@ -1,0 +1,12 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/DanielFernandez-F5/backend_libraryF5
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/DanielFernandez-F5/frontend_libraryF5
+[submodule "library-F5/backend"]
+	path = library-F5/backend
+	url = https://github.com/DanielFernandez-F5/backend_libraryF5
+[submodule "library-F5/frontend"]
+	path = library-F5/frontend
+	url = https://github.com/DanielFernandez-F5/frontend_libraryF5

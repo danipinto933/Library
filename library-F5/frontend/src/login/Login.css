@@ -1,0 +1,50 @@
+/* Estilos para los inputs dentro del Login cuando está en el modal */
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.modal-content input {
+    padding: 10px;
+    background-color: #4178af;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    color: white;
+    outline: none;
+}
+
+.modal-content input:focus {
+    border-color: #d4af37;
+}
+
+.modal-content button {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #d4af37;
+    color: #1f3a56;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.line {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #e6e6e6;
+}
+
+.line a {
+    color: #d4af37;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.line a:hover {
+    color: #f1cf6d;
+    text-decoration: underline;
+}

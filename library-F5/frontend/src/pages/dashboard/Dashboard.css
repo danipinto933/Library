@@ -1,0 +1,101 @@
+.dashboard-container {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
+}
+
+.dashboard-container h1 {
+    text-align: center;
+    color: #d4af37;
+    font-size: 2.2rem;
+    margin-bottom: 35px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Botones Principales (Secciones) --- */
+.main-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.main-buttons button {
+    background: transparent;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.4s ease;
+}
+
+.main-buttons button:hover,
+.main-buttons button.active {
+    background-color: #d4af37;
+    color: #1f3a56;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+}
+
+/* --- Separador Decorativo --- */
+.dashboard-container hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(212, 175, 55, 0.5), transparent);
+    margin: 40px 0;
+}
+
+/* --- Botones de Acciones CRUD (Crear, Leer...) --- */
+.crud-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 40px;
+    background: #1f3a56;
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.crud-buttons h2 {
+    width: 100%;
+    text-align: center;
+    color: #e6e6e6;
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+/* Heredamos el estilo sólido de los dashboards para los botones CRUD */
+.crud-buttons button {
+    /* El estilo base ya lo provee tu componente Button si tuviera clases, 
+       pero lo forzamos a lucir como los de las tarjetas interiores */
+    padding: 10px 20px;
+    background-color: #d4af37;
+    color: #1f3a56;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.crud-buttons button:hover,
+.crud-buttons button.active {
+    background-color: #f1cf6d;
+    box-shadow: 0 0 10px rgba(241, 207, 109, 0.5);
+}

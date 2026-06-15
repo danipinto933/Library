@@ -1,0 +1,106 @@
+.genre-dashboard {
+    background: #1f3a56;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    color: white;
+    margin: 20px auto;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.genre-dashboard h3 {
+    color: #d4af37;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding-bottom: 10px;
+}
+
+.genre-dashboard form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.genre-dashboard label {
+    font-size: 0.95rem;
+    color: #e6e6e6;
+    font-weight: 500;
+    margin-bottom: -5px;
+}
+
+.genre-dashboard input[type="text"] {
+    padding: 12px;
+    background-color: #4178af;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 6px;
+    color: white;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.genre-dashboard input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+.genre-dashboard button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    background-color: #d4af37;
+    color: #1f3a56;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.genre-dashboard button:hover:not(:disabled) {
+    background-color: #f1cf6d;
+    box-shadow: 0 0 10px rgba(241, 207, 109, 0.5);
+}
+
+.genre-dashboard button:disabled {
+    background-color: #5a6d80;
+    color: #9ab;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.genre-dashboard ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.genre-dashboard li {
+    background-color: #2c4a6e;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #d4af37;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    margin: 0;
+    color: #e6e6e6;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.genre-dashboard li:hover {
+    background-color: #365982;
+    transform: translateX(5px);
+    cursor: pointer;
+}

@@ -1,0 +1,15 @@
+# 1. Traemos un entorno de Node.js
+FROM node:20-alpine
+
+# 2. Le decimos que trabaje en la carpeta /app
+WORKDIR /app
+
+# 3. Copiamos los archivos de dependencias e instalamos
+COPY package*.json ./
+RUN npm install
+
+# 4. Copiamos el resto del código
+COPY . .
+
+# 5. Comando para arrancar
+CMD ["npm", "run", "dev"]

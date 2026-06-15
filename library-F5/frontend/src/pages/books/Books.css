@@ -1,0 +1,50 @@
+/* Books.css */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Esto hace la magia de 4 columnas */
+  gap: 20px; /* Espacio entre tarjetas */
+  padding: 20px;
+}
+
+/* Responsive básico para que no se rompa en pantallas pequeñas */
+@media (max-width: 1024px) {
+  .books-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 10px 0;
+  padding: 0 20px;
+}
+
+.book-search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  font-size: 1rem;
+  color: #000000;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 30px;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.book-search-input:focus {
+  background-color: #ffffff;
+  border-color: #2b7de9;
+  box-shadow: 0 4px 12px rgba(43, 125, 233, 0.2);
+}
+
+.book-search-input::placeholder {
+  color: #9ca3af;
+}

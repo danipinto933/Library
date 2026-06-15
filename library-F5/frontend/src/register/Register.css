@@ -1,0 +1,152 @@
+/* c:/Users/Administrator/Desktop/Proyecto_FullStack/fullStackFrontend/src/Register/Register.css */
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinea arriba para que no se corte si el contenido es grande */
+    padding: 40px 20px;
+    min-height: calc(100vh - 80px); /* Resta la altura del header aprox. */
+}
+
+.register-section {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    background: #1f3a56;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    color: white;
+}
+
+.register-section h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #d4af37;
+    font-weight: 600;
+}
+
+/* Estilos del formulario */
+.register-section form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.register-section label {
+    font-size: 0.9rem;
+    color: #e6e6e6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.register-section input {
+    padding: 10px;
+    background-color: #4178af;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+    color: white;
+    outline: none;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.register-section input:focus {
+    border-color: #d4af37;
+}
+
+.register-section button {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #d4af37;
+    color: #1f3a56;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.register-section button:hover:not(:disabled) {
+    background-color: #f1cf6d;
+    box-shadow: 0 0 10px rgba(241, 207, 109, 0.5);
+}
+
+.register-section button:disabled {
+    background-color: #5a6d80;
+    color: #9ab;
+    cursor: not-allowed;
+}
+
+/* Estilos para validación y mensajes */
+.instructions {
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    background: #334a64;
+    color: #fff;
+    padding: 0.5rem;
+    position: relative;
+}
+
+.instructions > svg {
+    margin-right: 0.25rem;
+}
+
+.offscreen {
+    position: absolute;
+    left: -9999px;
+}
+
+.hide {
+    display: none;
+}
+
+.valid {
+    color: limegreen;
+    margin-left: 0.25rem;
+}
+
+.invalid {
+    color: red;
+    margin-left: 0.25rem;
+}
+
+.errmsg {
+    background-color: lightpink;
+    color: firebrick;
+    font-weight: bold;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Estilo para links de "Sign In" o "Need an account" */
+.line {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #e6e6e6;
+}
+
+.line a {
+    color: #d4af37;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.line a:hover {
+    color: #f1cf6d;
+    text-decoration: underline;
+}
+
+.register-section > p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #e6e6e6;
+}

@@ -1,0 +1,156 @@
+.books-dashboard {
+    background: #1f3a56;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    color: white;
+    margin: 20px auto;
+    max-width: 800px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.books-dashboard h3 {
+    color: #d4af37;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    padding-bottom: 10px;
+}
+
+.books-dashboard form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.books-dashboard label {
+    font-size: 0.95rem;
+    color: #e6e6e6;
+    font-weight: 500;
+    margin-bottom: -5px;
+}
+
+.books-dashboard input[type="text"] {
+    padding: 12px;
+    background-color: #4178af;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 6px;
+    color: white;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.books-dashboard input[type="file"] {
+    padding: 12px;
+    background-color: rgba(65, 120, 175, 0.4);
+    border: 1px dashed rgba(212, 175, 55, 0.5);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+}
+
+.books-dashboard input[type="checkbox"] {
+    accent-color: #d4af37;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.books-dashboard input[type="checkbox"] + label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.books-dashboard input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+.books-dashboard button {
+    margin-top: 15px;
+    padding: 12px 20px;
+    background-color: #d4af37;
+    color: #1f3a56;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.books-dashboard button:hover:not(:disabled) {
+    background-color: #f1cf6d;
+    box-shadow: 0 0 10px rgba(241, 207, 109, 0.5);
+}
+
+.books-dashboard button:disabled {
+    background-color: #5a6d80;
+    color: #9ab;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Portada de imagen pre-visualizada o en lista */
+.books-dashboard img {
+    border-radius: 6px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    margin-top: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: block;
+}
+
+.books-dashboard ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.books-dashboard li,
+.books-dashboard ul > p {
+    background-color: #2c4a6e;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #d4af37;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    margin: 0;
+    color: #e6e6e6;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.books-dashboard li:hover {
+    background-color: #365982;
+    transform: translateX(5px);
+    cursor: pointer;
+}
+
+/* Filtros de Libros */
+.books-dashboard > div > div:first-of-type {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.books-dashboard > div > div:first-of-type button {
+    margin-top: 0;
+    flex: 1 1 auto;
+    font-size: 0.85rem;
+    padding: 10px;
+}

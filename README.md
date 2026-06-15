@@ -1,4 +1,4 @@
-# 📚 Sistema de Gestión de Biblioteca (Library-F5)
+# 📚 Sistema de Gestión de Biblioteca (Library)
 
 ¡Bienvenido al proyecto **Library-F5**! Este es un sistema web full-stack diseñado para la gestión de una biblioteca, permitiendo la administración de libros, autores, géneros, usuarios y reservas de libros. La aplicación cuenta con un sistema robusto de autenticación y autorización basado en roles.
 

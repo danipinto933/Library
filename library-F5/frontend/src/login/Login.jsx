@@ -4,7 +4,7 @@ import axios from '../api/axios'
 import { useNavigate, useLocation } from 'react-router-dom'
 import './Login.css'
 
-const LOGIN_URL = '/login';
+const LOGIN_URL = 'login';
 
 const Login = ({ onLoginSuccess }) => {
     const { setAuth } = useContext(AuthContext);
@@ -49,7 +49,7 @@ const Login = ({ onLoginSuccess }) => {
                 }
             }
 
-            const userResponse = await axios.get(`/users/1/${userName}`, {
+            const userResponse = await axios.get(`users/1/${userName}`, {
                 headers: { 'Authorization': `Bearer ${accessToken}` }
             });
 

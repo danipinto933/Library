@@ -10,8 +10,17 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class FullStackBackendApplication {
 
 	public static void main(String[] args) {
+		String directory = "./";
+		if (!new java.io.File(".env").exists()) {
+			if (new java.io.File("../.env").exists()) {
+				directory = "../";
+			} else if (new java.io.File("../../.env").exists()) {
+				directory = "../../";
+			}
+		}
+
 		Dotenv dotenv = Dotenv.configure()
-				.directory("./")
+				.directory(directory)
 				.ignoreIfMissing()
 				.load();
 		dotenv.entries().forEach(entry -> {

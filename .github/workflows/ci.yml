@@ -35,7 +35,9 @@ jobs:
 
       - name: Run Tests
         working-directory: ./${{ matrix.service }}
-        run: ./mvnw clean test
+        run: |
+          chmod +x mvnw
+          ./mvnw clean test
 
   docker-publish:
     name: Build & Push Docker Images

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: library-user-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: library-configmap
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: library-secret
+                  key: JWT_SECRET
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://db:5432/library_users"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: library-secret
+                  key: DB_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: library-secret
+                  key: DB_PASSWORD
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081

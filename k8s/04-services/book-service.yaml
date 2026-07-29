@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: book-uploads-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-service
+  template:
+    metadata:
+      labels:
+        app: book-service
+    spec:
+      containers:
+        - name: book-service
+          image: library-book-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          envFrom:
+            - configMapRef:
+                name: library-configmap
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: library-secret
+                  key: JWT_SECRET
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://db:5432/library_books"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: library-secret
+                  key: DB_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: library-secret
+                  key: DB_PASSWORD
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
+          volumeMounts:
+            - name: uploads-volume
+              mountPath: /app/uploads
+      volumes:
+        - name: uploads-volume
+          persistentVolumeClaim:
+            claimName: book-uploads-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+spec:
+  selector:
+    app: book-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082

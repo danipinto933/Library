@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # ─────────────────────────────────────────────────────────────
+      # CORS centralizado en el Gateway
+      # Los microservicios internos NO necesitan configurar CORS
+      # ─────────────────────────────────────────────────────────────
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - "${app.frontend-url}"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            exposedHeaders:
+              - Authorization
+
+      # ─────────────────────────────────────────────────────────────
+      # RUTAS — lb:// = LoadBalancer via Eureka
+      # ─────────────────────────────────────────────────────────────
+      routes:
+        # AUTH — Login (público, sin validación JWT)
+        - id: auth-service-login
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/login
+
+        # USERS — Gestión de usuarios y roles
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**, /api/v1/roles/**
+
+        # BOOKS — Libros, géneros e imágenes
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/v1/books/**, /api/v1/genres/**, /api/v1/images/**, /uploads/**
+
+        # RESERVES — Reservas de libros
+        - id: reserve-service
+          uri: lb://reserve-service
+          predicates:
+            - Path=/api/v1/reserves/**
+
+app:
+  jwt-secret: ${JWT_SECRET}
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: auth-service
+        url: /v3/api-docs/auth-service
+      - name: user-service
+        url: /v3/api-docs/user-service
+      - name: book-service
+        url: /v3/api-docs/book-service
+      - name: reserve-service
+        url: /v3/api-docs/reserve-service
+  api-docs:
+    path: /v3/api-docs

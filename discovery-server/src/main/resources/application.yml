@@ -1,0 +1,30 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-server
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    # El servidor Eureka no se registra a sí mismo
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+  server:
+    # No esperar en el arranque si no hay instancias registradas
+    wait-time-in-ms-when-sync-empty: 0
+    # Desactivar autoprotección en desarrollo (en producción cambiar a true)
+    enable-self-preservation: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

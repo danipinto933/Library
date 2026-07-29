@@ -1,0 +1,2 @@
+com\library\apigateway\ApiGatewayApplicationTests.class
+com\library\apigateway\filter\JwtAuthenticationFilterTests.class

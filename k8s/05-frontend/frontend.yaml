@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: library-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5173
+          env:
+            # En VITE_API_URL usamos localhost porque esto se ejecuta en el navegador del cliente (fuera del clúster)
+            # 30085 es el NodePort que expusimos en api-gateway.yaml
+            - name: VITE_API_URL
+              value: "http://localhost:30085/api/v1"
+            - name: VITE_COVERS_URL
+              value: "http://localhost:30085/uploads/covers"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: NodePort
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 5173
+      targetPort: 5173
+      nodePort: 30173

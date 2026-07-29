@@ -1,0 +1,30 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: book-service
+  datasource:
+    # Book-Service es DUEÑO de la base de datos de libros
+    url: ${DB_BOOKS_URL:jdbc:postgresql://localhost:5432/library_books}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+  
+  # Configuración para subida de archivos (imágenes de libros)
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# Ruta donde se guardarán las imágenes (relativa a la ejecución)
+app:
+  jwt-secret: ${JWT_SECRET}
+  upload-dir: uploads

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    # Carga configuración del Config Server (rutas, CORS, JWT secret)
+    # "optional:" evita fallo si el Config Server no está disponible al arrancar
+    import: "optional:configserver:http://localhost:8888"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, gateway
+  endpoint:
+    health:
+      show-details: always

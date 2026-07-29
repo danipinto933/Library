@@ -1,0 +1,78 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ConfigServerApplication<config-server>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.configserver.ConfigServerApplication",
+            "projectName": "config-server",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DiscoveryServerApplication<discovery-server>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.discoveryserver.DiscoveryServerApplication",
+            "projectName": "discovery-server",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AuthServiceApplication<auth-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.authservice.AuthServiceApplication",
+            "projectName": "auth-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiGatewayApplication<api-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.apigateway.ApiGatewayApplication",
+            "projectName": "api-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-BookServiceApplication<book-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.bookservice.BookServiceApplication",
+            "projectName": "book-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ReserveServiceApplication<reserve-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.reserveservice.ReserveServiceApplication",
+            "projectName": "reserve-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UserServiceApplication<user-service>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.library.userservice.UserServiceApplication",
+            "projectName": "user-service",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

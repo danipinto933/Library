@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    # User-Service es DUEÑO de la base de datos de usuarios
+    url: ${DB_USERS_URL:jdbc:postgresql://localhost:5432/library_users}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      # update: crea o actualiza el esquema
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+# El secreto no se necesita aquí porque el Gateway ya validó el JWT
+# pero lo dejamos para uso futuro si el servicio necesita validación interna
+app:
+  jwt-secret: ${JWT_SECRET}

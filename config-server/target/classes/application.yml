@@ -1,0 +1,23 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          # Apunta a la carpeta config-repo en el directorio raíz del proyecto
+          search-locations: file:../config-repo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

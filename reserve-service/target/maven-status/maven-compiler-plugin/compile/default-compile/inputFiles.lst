@@ -11,6 +11,7 @@ C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\sr
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\ErrorResponse.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\GlobalExceptionHandler.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\InvalidReservationDatesException.java
+C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\MaxReservationLimitExceededException.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\ReservationAlreadyExtendedException.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\ResourceNotFoundException.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\mapper\ReserveMapper.java

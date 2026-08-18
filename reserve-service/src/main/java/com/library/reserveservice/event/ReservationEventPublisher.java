@@ -15,6 +15,19 @@ public class ReservationEventPublisher {
 
     public void publishReservationCreatedEvent(ReservationEvent event) {
         log.info("Publishing ReservationCreated event for reserveId: {}", event.getReserveId());
-        kafkaTemplate.send(TOPIC, event);
+        try {
+            kafkaTemplate.send(TOPIC, event).whenComplete((result, ex) -> {
+                if (ex != null) {
+                    log.error("Fallo asíncrono al publicar evento en Kafka para reserveId {}: {}", 
+                              event.getReserveId(), ex.getMessage(), ex);
+                } else {
+                    log.info("Evento publicado exitosamente en Kafka en el tópico '{}' para reserveId: {}", 
+                             TOPIC, event.getReserveId());
+                }
+            });
+        } catch (Exception e) {
+            log.error("Fallo síncrono al intentar enviar evento a Kafka para reserveId {}: {}", 
+                      event.getReserveId(), e.getMessage(), e);
+        }
     }
 }

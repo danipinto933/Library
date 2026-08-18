@@ -18,21 +18,28 @@ public class ReservationEventListener {
 
     @KafkaListener(topics = "book-reservations", groupId = "book-service-group")
     public void onReservationEvent(ReservationEvent event) {
-        log.info("Received ReservationEvent for reserveId: {} with status: {}", event.getReserveId(), event.getStatus());
+        try {
+            log.info("Received ReservationEvent for reserveId: {} with status: {}", 
+                     event != null ? event.getReserveId() : "null", 
+                     event != null ? event.getStatus() : "null");
 
-        if (event.getBookIds() == null || event.getBookIds().isEmpty()) {
-            return;
+            if (event == null || event.getBookIds() == null || event.getBookIds().isEmpty()) {
+                return;
+            }
+
+            List<Book> books = bookRepository.findAllById(event.getBookIds());
+            
+            boolean newAvailabilityStatus = !"CREATED".equals(event.getStatus());
+
+            for (Book book : books) {
+                book.setAvailable(newAvailabilityStatus);
+            }
+
+            bookRepository.saveAll(books);
+            log.info("Updated availability for {} books to {}", books.size(), newAvailabilityStatus);
+        } catch (Exception e) {
+            log.error("Error al procesar evento de reserva en book-service para reserveId {}: {}", 
+                      event != null ? event.getReserveId() : "null", e.getMessage(), e);
         }
-
-        List<Book> books = bookRepository.findAllById(event.getBookIds());
-        
-        boolean newAvailabilityStatus = !"CREATED".equals(event.getStatus());
-
-        for (Book book : books) {
-            book.setAvailable(newAvailabilityStatus);
-        }
-
-        bookRepository.saveAll(books);
-        log.info("Updated availability for {} books to {}", books.size(), newAvailabilityStatus);
     }
 }

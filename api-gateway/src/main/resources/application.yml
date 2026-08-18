@@ -1,10 +1,17 @@
+server:
+  port: ${PORT:8080}
+
 spring:
   application:
     name: api-gateway
   config:
     # Carga configuración del Config Server (rutas, CORS, JWT secret)
     # "optional:" evita fallo si el Config Server no está disponible al arrancar
-    import: "optional:configserver:http://localhost:8888"
+    import: ${SPRING_CONFIG_IMPORT:optional:configserver:http://localhost:8888}
+
+eureka:
+  client:
+    enabled: ${EUREKA_CLIENT_ENABLED:true}
 
 management:
   endpoints:
@@ -14,3 +21,4 @@ management:
   endpoint:
     health:
       show-details: always
+

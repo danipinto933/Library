@@ -88,6 +88,10 @@ const ReservesSection = ({ activeAction, handleSectionClick, token }) => {
             if (reserveBookIds.includes(bookId)) {
                 setReserveBookIds(reserveBookIds.filter(id => id !== bookId));
             } else {
+                if (reserveBookIds.length >= 3) {
+                    alert("No puedes seleccionar más de 3 libros para una reserva.");
+                    return;
+                }
                 setReserveBookIds([...reserveBookIds, bookId]);
             }
         };
@@ -96,6 +100,10 @@ const ReservesSection = ({ activeAction, handleSectionClick, token }) => {
             if (updatedBookIds.includes(bookId)) {
                 setUpdatedBookIds(updatedBookIds.filter(id => id !== bookId));
             } else {
+                if (updatedBookIds.length >= 3) {
+                    alert("No puedes seleccionar más de 3 libros para una reserva.");
+                    return;
+                }
                 setUpdatedBookIds([...updatedBookIds, bookId]);
             }
         };
@@ -188,7 +196,6 @@ const ReservesSection = ({ activeAction, handleSectionClick, token }) => {
                 if (data && (!Array.isArray(data) || data.length > 0)) {
                     const reservesArray = Array.isArray(data) ? data : [data];
                     setDisplayedReserves(reservesArray);
-                    console.log(displayedReserves)
                 } else {
                     setDisplayedReserves([]);
                     alert("Reserva no encontrada");
@@ -364,7 +371,9 @@ const ReservesSection = ({ activeAction, handleSectionClick, token }) => {
                                                 <div style={{ flex: 1 }}>
                                                     <h4 style={{ fontSize: '14px', marginBottom: '10px' }}>Libros Disponibles</h4>
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                                        {availableBooks.map((book) => (
+                                                        {availableBooks
+                                                            .filter((book) => !selectedReserve.books?.some((reservedBook) => reservedBook.id === book.id))
+                                                            .map((book) => (
                                                             <div key={book.id} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                                 <input
                                                                     type="checkbox"

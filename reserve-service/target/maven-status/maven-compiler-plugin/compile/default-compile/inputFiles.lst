@@ -5,6 +5,8 @@ C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\sr
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\dto\BookExternalDto.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\dto\ReserveDto.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\dto\UserExternalDto.java
+C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\event\ReservationEvent.java
+C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\event\ReservationEventPublisher.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\BookNotAvailableException.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\ErrorResponse.java
 C:\Users\Slork\OneDrive\Escritorio\Programacion\Nueva carpeta\reserve-service\src\main\java\com\library\reserveservice\exception\GlobalExceptionHandler.java

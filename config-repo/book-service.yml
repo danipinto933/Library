@@ -24,7 +24,13 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  kafka:
+    consumer:
+      properties:
+        spring.json.type.mapping: ReservationEvent:com.library.bookservice.event.ReservationEvent
+
 # Ruta donde se guardarán las imágenes (relativa a la ejecución)
 app:
   jwt-secret: ${JWT_SECRET}
   upload-dir: uploads
+

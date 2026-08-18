@@ -13,7 +13,7 @@ function Header() {
   const [user, setUser] = useState(null); 
   
   const { auth, setAuth } = useAuth();
-  const { cart, setCart, removeFromCart } = useContext(CartContext); 
+  const { cart, setCart, removeFromCart, activeReservesCount } = useContext(CartContext); 
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -76,6 +76,11 @@ function Header() {
       alert("Cargando datos del usuario... por favor intenta de nuevo en unos segundos.");
       return;
     }
+
+    if (cart.length + activeReservesCount > 3) {
+      alert(`No se puede confirmar la reserva. El límite total es de 3 libros por usuario (Tienes ${activeReservesCount} activos y ${cart.length} en el carrito).`);
+      return;
+    }
   
     try {
       const newReserve = {
@@ -101,7 +106,9 @@ function Header() {
     } catch (error) {
       console.error("Error al crear la reserva:", error);
       
-      if (error.response?.status === 401) {
+      if (error.response?.data?.message) {
+          alert(`Error: ${error.response.data.message}`);
+      } else if (error.response?.status === 401) {
           alert("Error 401: Sesión no válida. Verifica que el usuario tenga ID asignado.");
       } else {
           alert("Error al crear la reserva");

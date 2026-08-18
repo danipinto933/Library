@@ -32,9 +32,6 @@ export const useDashboardData = () => {
           axios.get('reserves', config)
         ]);
 
-        console.log(resGenres.data);
-
-
         if (isMounted) {
           setGenres(resGenres.data);
           setBooks(resBooks.data);

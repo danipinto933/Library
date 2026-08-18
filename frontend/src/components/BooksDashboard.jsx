@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from '../api/axios';
 import Button from '../components/Button';
 import './BooksDashboard.css';
+import LoadingSpinner from './loadingSpinner/LoadingSpinner';
 
 const BooksSection = ({ activeAction, handleSectionClick, token }) => {
     const [bookTitle, setBookTitle] = useState('');
@@ -11,10 +12,12 @@ const BooksSection = ({ activeAction, handleSectionClick, token }) => {
     const [bookGenres, setBookGenres] = useState([]);
     const [bookAvailable, setBookAvailable] = useState(false);
     const [displayedBooks, setDisplayedBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const [genresBook, setGenresBook] = useState([]);
     const [books, setBooks] = useState([]);
     const [selectedBook, setSelectedBook] = useState(null);
+    const [selectedBookForView, setSelectedBookForView] = useState(null);
     const [updatedBookTitle, setUpdatedBookTitle] = useState('');
     const [updatedBookIsbn, setUpdatedBookIsbn] = useState('');
     const [updatedBookAuthor, setUpdatedBookAuthor] = useState('');
@@ -28,6 +31,7 @@ const BooksSection = ({ activeAction, handleSectionClick, token }) => {
     
         const getBooks = async () => {
             try {
+                setLoading(true);
                 const response = await axios.get('books', {
                 signal: controller.signal,
                 headers: { 'Authorization': token ? `Bearer ${token}` : '' }
@@ -38,7 +42,9 @@ const BooksSection = ({ activeAction, handleSectionClick, token }) => {
             }
             }
             catch (err){
-            console.error(err);
+                console.error(err);
+            } finally {
+                if (isMounted) setLoading(false);
             }
         }
         const getGenres = async () => {
@@ -59,7 +65,8 @@ const BooksSection = ({ activeAction, handleSectionClick, token }) => {
     
         return() => {
             isMounted = false;
-        }}, [books, token])
+            controller.abort();
+        }}, [token])
 
         const handleSubmitCreateBook = async (e) => {
             e.preventDefault();
@@ -110,6 +117,14 @@ const BooksSection = ({ activeAction, handleSectionClick, token }) => {
                 setUpdatedBookGenres(updatedBookGenres.filter(name => name !== genreName));
             } else {
                 setUpdatedBookGenres([...updatedBookGenres, genreName]);
+            }
+        };
+
+        const handleBookClickForView = (book) => {
+            if (selectedBookForView && selectedBookForView.id === book.id) {
+                setSelectedBookForView(null);
+            } else {
+                setSelectedBookForView(book);
             }
         };
         
@@ -313,63 +328,94 @@ const BooksSection = ({ activeAction, handleSectionClick, token }) => {
                 {activeAction === 'read' && (
                     <div>
                     <h3>Lista de libros</h3>
-                        <div>
-                            <Button onClick={handleResetList}>
-                                Mostrar Todos
-                            </Button>
-
-                            <Button onClick={() => handleSearchBook(1, "Introduce el título del libro a buscar:")}>
-                                Por titulo
-                            </Button>
-
-                            <Button onClick={() => handleSearchBook(2, "Introduce el ISBN del libro a buscar:")}>
-                                Por ISBN
-                            </Button>
-
-                            <Button onClick={() => handleSearchBook(3, "Introduce el autor del libro a buscar:")}>
-                                Por autor
-                            </Button>
-
-                            <Button onClick={() => handleSearchBook(4, "Introduce el género del libro a buscar:")}>
-                                Por género
-                            </Button>
-
-                            <Button onClick={() => handleSearchBook(5, "")}>
-                                Disponibles
-                            </Button>
-
-                            <Button onClick={() => handleSearchBook(6, "")}>
-                                Alquilados
-                            </Button>
-                        </div>
-
-                    {displayedBooks.length === 1 ? (
-                        <ul>
-                        {displayedBooks.map((book, index) => (
+                        {loading ? (
+                            <LoadingSpinner message="exportando libros..." />
+                        ) : (
                             <>
-                                <p key={index}>Título: {book.title}</p>
-                                <p key={index}>ISBN: {book.isbn}</p>
-                                <p key={index}>Autor: {book.author}</p>
-                                <p>Géneros: {
-                                    Array.isArray(book.genres) 
-                                        ? book.genres.map(g => g.genreName || g).join(', ') 
-                                        : book.genres
-                                }</p>
-                                <p key={index}>Disponible: {book.available ? "Disponible" : "Alquilado"}</p>
-                                <p>Portada: {book.image.name}</p>
-                                <img src={`${import.meta.env.VITE_COVERS_URL || "http://localhost:8080/uploads/covers/"}${book.image.name}`} alt={`Portada de ${book.title}`} style={{ width: '100px' }}/>
+                                <div>
+                                    <Button onClick={handleResetList}>
+                                        Mostrar Todos
+                                    </Button>
+
+                                    <Button onClick={() => handleSearchBook(1, "Introduce el título del libro a buscar:")}>
+                                        Por titulo
+                                    </Button>
+
+                                    <Button onClick={() => handleSearchBook(2, "Introduce el ISBN del libro a buscar:")}>
+                                        Por ISBN
+                                    </Button>
+
+                                    <Button onClick={() => handleSearchBook(3, "Introduce el autor del libro a buscar:")}>
+                                        Por autor
+                                    </Button>
+
+                                    <Button onClick={() => handleSearchBook(4, "Introduce el género del libro a buscar:")}>
+                                        Por género
+                                    </Button>
+
+                                    <Button onClick={() => handleSearchBook(5, "")}>
+                                        Disponibles
+                                    </Button>
+
+                                    <Button onClick={() => handleSearchBook(6, "")}>
+                                        Alquilados
+                                    </Button>
+                                </div>
+
+                                {displayedBooks.length > 0 ? (
+                                    <ul>
+                                        {displayedBooks.map((book, index) => {
+                                            const isSelected = selectedBookForView && selectedBookForView.id === book.id;
+                                            const showDetails = isSelected || displayedBooks.length === 1;
+                                            const coversBaseUrl = (import.meta.env.VITE_COVERS_URL || "http://localhost:8085/uploads/covers/").replace(/\/$/, '');
+                                            const imageName = book.image?.name || (typeof book.image === 'string' ? book.image : null);
+                                            const imageUrl = imageName ? `${coversBaseUrl}/${imageName}` : null;
+                                            const genresFormatted = Array.isArray(book.genres)
+                                                ? book.genres.map(g => (typeof g === 'object' && g !== null ? g.genreName || g.name || '' : g)).filter(Boolean).join(', ')
+                                                : book.genres || 'Sin género';
+
+                                            return (
+                                                <li
+                                                    key={book.id || index}
+                                                    onClick={() => handleBookClickForView(book)}
+                                                    className={`book-item ${showDetails ? 'selected' : ''}`}
+                                                    style={{ cursor: 'pointer' }}
+                                                >
+                                                    <div className="book-item-header">
+                                                        <span className="book-item-title">{book.title}</span>
+                                                        <span className="book-item-indicator">
+                                                            {showDetails ? '▲ Ocultar datos' : '▼ Ver datos'}
+                                                        </span>
+                                                    </div>
+
+                                                    {showDetails && (
+                                                        <div className="book-details-card" onClick={(e) => e.stopPropagation()}>
+                                                            <p><strong>Título:</strong> {book.title}</p>
+                                                            <p><strong>ISBN:</strong> {book.isbn}</p>
+                                                            <p><strong>Autor:</strong> {book.author}</p>
+                                                            <p><strong>Géneros:</strong> {genresFormatted}</p>
+                                                            <p><strong>Estado:</strong> {book.available ? "Disponible" : "Alquilado"}</p>
+                                                            {imageUrl && (
+                                                                <div>
+                                                                    <p><strong>Portada:</strong> {imageName}</p>
+                                                                    <img
+                                                                        src={imageUrl}
+                                                                        alt={`Portada de ${book.title}`}
+                                                                        className="book-details-cover"
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                ) : (
+                                    <p>No hay libros cargados.</p>
+                                )}
                             </>
-                        ))}
-                        </ul>
-                    ) : displayedBooks.length > 1 ? (
-                        <ul>
-                        {displayedBooks.map((book, index) => (
-                            <li key={index}>{book.title}</li>
-                        ))}
-                        </ul>
-                    ) : (
-                        <p>No hay libros cargados.</p>
-                    )}
+                        )}
                     </div>
                 )}
 

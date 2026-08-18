@@ -9,6 +9,7 @@ import com.library.reserveservice.model.Reserve;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -56,10 +57,13 @@ public class ReserveMapper {
     public Reserve toEntity(ReserveDto reserveDto) {
         if (reserveDto == null) return null;
 
+        LocalDate reserveDate = reserveDto.getReserveDate() != null ? reserveDto.getReserveDate() : LocalDate.now();
+        LocalDate returnDate = reserveDto.getReturnDate() != null ? reserveDto.getReturnDate() : reserveDate.plusMonths(1);
+
         Reserve reserve = Reserve.builder()
                 .id(reserveDto.getId())
-                .reserveDate(reserveDto.getReserveDate())
-                .returnDate(reserveDto.getReturnDate())
+                .reserveDate(reserveDate)
+                .returnDate(returnDate)
                 .ampliated(reserveDto.isAmpliated())
                 .build();
 

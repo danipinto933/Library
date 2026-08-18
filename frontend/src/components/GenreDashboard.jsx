@@ -10,95 +10,102 @@ const GenresSection = ({ activeAction, handleSectionClick, token }) => {
     const [updatedGenreName, setUpdatedGenreName] = useState('');
     const [displayedGenres, setDisplayedGenres] = useState([]);
 
-    useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
-    
-        const getGenres = async () => {
-            try {
-                const response = await axios.get('genres', {
-                signal: controller.signal,
+    const getGenres = async (signal) => {
+        try {
+            const response = await axios.get('genres', {
+                signal,
                 headers: { 'Authorization': token ? `Bearer ${token}` : '' }
             });
-            if (isMounted){
-                setGenreBooks(response.data);
-                setDisplayedGenres(response.data);
-            }
-            }
-            catch (err){
-            console.error(err);
+            setGenreBooks(response.data);
+            setDisplayedGenres(response.data);
+        } catch (err) {
+            if (err.name !== 'CanceledError') {
+                console.error(err);
             }
         }
-    
-        getGenres();
-    
-        return() => {
-            isMounted = false;
-        }}, [genreBooks, token])
+    };
 
-        const handleSubmitCreateGenre = async (e) => {
-            e.preventDefault();
+    useEffect(() => {
+        const controller = new AbortController();
+        getGenres(controller.signal);
+
+        return () => {
+            controller.abort();
+        };
+    }, [token]);
+
+    const handleSubmitCreateGenre = async (e) => {
+        e.preventDefault();
+        try {
             await axios.post('genres',
-            {
-                genreName: genreName,
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : '' },
-                withCredentials: true
-            }
+                { genreName: genreName },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    withCredentials: true
+                }
             );
             setGenreName('');
+            alert("¡Registro del género completo!");
+            getGenres();
             handleSectionClick('genres');
-            alert("¡Registro del género completo!")
+        } catch (err) {
+            console.error(err);
+            alert("Error al crear el género");
+        }
+    };
 
-        }
-        
-        const handleGenreClickForUpdate = (genre) => {
-            setSelectedGenre(genre);
-            setUpdatedGenreName(genre.genreName);
-        }
-        
-        const handleUpdateGenre = async (e) => {
-            e.preventDefault();
-            if (!selectedGenre) return;
-            try {
+    const handleGenreClickForUpdate = (genre) => {
+        setSelectedGenre(genre);
+        setUpdatedGenreName(genre.genreName);
+    };
+
+    const handleUpdateGenre = async (e) => {
+        e.preventDefault();
+        if (!selectedGenre) return;
+        try {
             await axios.put(`genres/${selectedGenre.id}`,
-                { genreName: updatedGenreName },
-                { headers:
-                { 'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                },
-                withCredentials: true 
+                { id: selectedGenre.id, genreName: updatedGenreName },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    withCredentials: true
                 }
             );
             alert("¡Género actualizado!");
             setSelectedGenre(null);
             setUpdatedGenreName('');
-            } catch (err) {
+            getGenres();
+        } catch (err) {
             console.error(err);
             alert("Error al actualizar el género");
-            }
         }
-        
-        const handleDeleteGenre = async (genre) => {
-            if (window.confirm(`¿Estás seguro de que quieres borrar el género "${genre.genreName}"?`)) {
+    };
+
+    const handleDeleteGenre = async (genre) => {
+        if (window.confirm(`¿Estás seguro de que quieres borrar el género "${genre.genreName}"?`)) {
             try {
                 await axios.delete(`genres/${genre.id}`,
-                { headers:
-                { 'Content-Type': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                },
-                withCredentials: true 
-                });
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token ? `Bearer ${token}` : ''
+                        },
+                        withCredentials: true
+                    }
+                );
                 alert("¡Género eliminado!");
+                getGenres();
             } catch (err) {
                 console.error(err);
                 alert("Error al eliminar el género");
             }
-            }
         }
+    };
 
         const handleSearchGenre = async (e) => {
         const searchTerm = window.prompt("Introduce el nombre del género a buscar:");

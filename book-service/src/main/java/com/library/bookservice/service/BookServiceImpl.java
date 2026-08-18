@@ -37,7 +37,7 @@ public class BookServiceImpl implements BookService {
     public ResponseEntity<Book> addBook(BookDto bookDto, MultipartFile file) {
         Book book = bookMapper.toEntity(bookDto);
 
-        if (bookRepository.findByTitle(book.getTitle()) != null) {
+        if (bookRepository.findByTitleIgnoreCase(book.getTitle()) != null) {
             throw new BookAlreadyExistsException("El libro con el título '" + book.getTitle() + "' ya está registrado");
         }
         if (bookRepository.findByIsbn(book.getIsbn()) != null) {
@@ -88,7 +88,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseEntity<BookDto> findByTitle(String bookTitle) {
-        Book book = bookRepository.findByTitle(bookTitle);
+        Book book = bookRepository.findByTitleIgnoreCase(bookTitle);
+        if (book == null) {
+            List<Book> books = bookRepository.findByTitleContainingIgnoreCase(bookTitle);
+            if (books != null && !books.isEmpty()) {
+                book = books.get(0);
+            }
+        }
         if (book == null) {
             throw new ResourceNotFoundException("Libro con el título " + bookTitle + " no encontrado");
         }
@@ -97,7 +103,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseEntity<BookDto> findByIsbn(String bookIsbn) {
-        Book book = bookRepository.findByIsbn(bookIsbn);
+        Book book = bookRepository.findByIsbnIgnoreCase(bookIsbn);
+        if (book == null) {
+            book = bookRepository.findByIsbn(bookIsbn);
+        }
         if (book == null) {
             throw new ResourceNotFoundException("Libro con el ISBN " + bookIsbn + " no encontrado");
         }
@@ -106,7 +115,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseEntity<List<BookDto>> findByAuthor(String bookAuthor) {
-        List<Book> books = bookRepository.findByAuthor(bookAuthor);
+        List<Book> books = bookRepository.findByAuthorIgnoreCase(bookAuthor);
+        if (books == null || books.isEmpty()) {
+            books = bookRepository.findByAuthorContainingIgnoreCase(bookAuthor);
+        }
         if (books == null || books.isEmpty()) {
             throw new ResourceNotFoundException("Libros con el autor " + bookAuthor + " no encontrado");
         }
@@ -116,7 +128,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseEntity<List<BookDto>> findByGenre(String bookGenre) {
-        List<Book> books = bookRepository.findByGenres_GenreName(bookGenre);
+        List<Book> books = bookRepository.findByGenres_GenreNameIgnoreCase(bookGenre);
+        if (books == null || books.isEmpty()) {
+            books = bookRepository.findByGenres_GenreNameContainingIgnoreCase(bookGenre);
+        }
         if (books == null || books.isEmpty()) {
             throw new ResourceNotFoundException("Libros con el genero " + bookGenre + " no encontrado");
         }

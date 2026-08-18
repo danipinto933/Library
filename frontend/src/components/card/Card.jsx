@@ -3,7 +3,8 @@ import './Card.css'
 function Card({ book, onClick }) {
 
     const nombreImagen = book.image ? book.image.name : null;
-    const coversBaseUrl = import.meta.env.VITE_COVERS_URL || "http://localhost:8080/uploads/covers/";
+    const rawBaseUrl = import.meta.env.VITE_COVERS_URL || "http://localhost:8085/uploads/covers/";
+    const coversBaseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl : `${rawBaseUrl}/`;
 
     const imagenUrl = nombreImagen 
         ? `${coversBaseUrl}${nombreImagen}`

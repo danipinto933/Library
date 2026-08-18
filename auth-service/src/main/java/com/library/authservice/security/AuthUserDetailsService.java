@@ -21,7 +21,10 @@ public class AuthUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.library.authservice.model.User user = userRepository.findByUserName(username);
+        com.library.authservice.model.User user = userRepository.findByUserNameIgnoreCase(username);
+        if (user == null) {
+            user = userRepository.findByUserName(username);
+        }
 
         if (user == null) {
             throw new UsernameNotFoundException("Usuario '" + username + "' no encontrado");

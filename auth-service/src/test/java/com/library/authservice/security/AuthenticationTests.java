@@ -63,7 +63,7 @@ class AuthenticationTests {
     void authenticate_credencialesCorrectas_retornaAuthenticationConRoles() {
         String rawPassword = "mypassword";
         User user = buildUser("dani", rawPassword, "ADMIN");
-        when(userRepository.findByUserName("dani")).thenReturn(user);
+        when(userRepository.findByUserNameIgnoreCase("dani")).thenReturn(user);
 
         Authentication result = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken("dani", rawPassword)
@@ -80,7 +80,7 @@ class AuthenticationTests {
     void authenticate_usuarioConRolUser_retornaRoleUser() {
         String rawPassword = "pass123";
         User user = buildUser("usuario", rawPassword, "USER");
-        when(userRepository.findByUserName("usuario")).thenReturn(user);
+        when(userRepository.findByUserNameIgnoreCase("usuario")).thenReturn(user);
 
         Authentication result = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken("usuario", rawPassword)
@@ -97,7 +97,7 @@ class AuthenticationTests {
     @Test
     void authenticate_passwordIncorrecta_lanzaBadCredentialsException() {
         User user = buildUser("dani", "correctPassword", "ADMIN");
-        when(userRepository.findByUserName("dani")).thenReturn(user);
+        when(userRepository.findByUserNameIgnoreCase("dani")).thenReturn(user);
 
         assertThatThrownBy(() ->
                 authManager.authenticate(
@@ -110,7 +110,7 @@ class AuthenticationTests {
     @Test
     void authenticate_passwordVacia_lanzaBadCredentialsException() {
         User user = buildUser("dani", "somePassword", "ADMIN");
-        when(userRepository.findByUserName("dani")).thenReturn(user);
+        when(userRepository.findByUserNameIgnoreCase("dani")).thenReturn(user);
 
         assertThatThrownBy(() ->
                 authManager.authenticate(
@@ -125,7 +125,7 @@ class AuthenticationTests {
 
     @Test
     void authenticate_usuarioNoExiste_lanzaUsernameNotFoundException() {
-        when(userRepository.findByUserName("fantasma")).thenReturn(null);
+        when(userRepository.findByUserNameIgnoreCase("fantasma")).thenReturn(null);
 
         assertThatThrownBy(() ->
                 authManager.authenticate(

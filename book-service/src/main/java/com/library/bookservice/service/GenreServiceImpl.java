@@ -25,7 +25,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public ResponseEntity<Genre> addGenre(GenreDto genreDto) {
-        Genre existingGenre = genreRepository.findGenreByGenreName(genreDto.getGenreName());
+        Genre existingGenre = genreRepository.findGenreByGenreNameIgnoreCase(genreDto.getGenreName());
         if (existingGenre != null) {
             // FASE VII: Ahora lanza la excepción semántica correcta
             throw new GenreAlreadyExistsException("El género con el nombre " + genreDto.getGenreName() + " ya existe");
@@ -46,7 +46,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public ResponseEntity<GenreDto> findGenreByGenreName(String genreName) {
-        Genre genre = genreRepository.findGenreByGenreName(genreName);
+        Genre genre = genreRepository.findGenreByGenreNameIgnoreCase(genreName);
         if (genre == null) {
             throw new ResourceNotFoundException("Género con el nombre " + genreName + " no encontrado");
         }
@@ -62,7 +62,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre findGenreByName(String genreName) {
-        return genreRepository.findGenreByGenreName(genreName);
+        return genreRepository.findGenreByGenreNameIgnoreCase(genreName);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class GenreServiceImpl implements GenreService {
         Genre oldGenre = genreRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El genero no se ha encontrado"));
         
-        Genre existingGenre = genreRepository.findGenreByGenreName(genreDto.getGenreName());
+        Genre existingGenre = genreRepository.findGenreByGenreNameIgnoreCase(genreDto.getGenreName());
         if (existingGenre != null && !id.equals(existingGenre.getId())) {
             throw new GenreAlreadyExistsException("El género con el nombre " + genreDto.getGenreName() + " ya existe");
         }

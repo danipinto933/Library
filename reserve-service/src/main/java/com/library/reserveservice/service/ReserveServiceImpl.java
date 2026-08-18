@@ -9,6 +9,7 @@ import com.library.reserveservice.event.ReservationEvent;
 import com.library.reserveservice.event.ReservationEventPublisher;
 import com.library.reserveservice.exception.BookNotAvailableException;
 import com.library.reserveservice.exception.InvalidReservationDatesException;
+import com.library.reserveservice.exception.MaxReservationLimitExceededException;
 import com.library.reserveservice.exception.ReservationAlreadyExtendedException;
 import com.library.reserveservice.exception.ResourceNotFoundException;
 import com.library.reserveservice.mapper.ReserveMapper;
@@ -42,16 +43,47 @@ public class ReserveServiceImpl implements ReserveService {
     public ResponseEntity<ReserveDto> addReserve(ReserveDto reserveDto) {
         Reserve reserve = reserveMapper.toEntity(reserveDto);
 
-        if (reserve.getReturnDate() != null && reserve.getReserveDate() != null) {
-            if (reserve.getReturnDate().isBefore(reserve.getReserveDate()) || reserve.getReturnDate().isEqual(reserve.getReserveDate())) {
-                throw new InvalidReservationDatesException("La fecha de devolución no puede ser anterior o igual a la fecha de reserva");
-            }
+        if (reserve.getReserveDate() == null) {
+            reserve.setReserveDate(LocalDate.now());
+        }
+        if (reserve.getReturnDate() == null) {
+            reserve.setReturnDate(reserve.getReserveDate().plusMonths(1));
+        }
+
+        if (reserve.getReturnDate().isBefore(reserve.getReserveDate()) || reserve.getReturnDate().isEqual(reserve.getReserveDate())) {
+            throw new InvalidReservationDatesException("La fecha de devolución no puede ser anterior o igual a la fecha de reserva");
+        }
+
+        if (reserve.getUserId() == null) {
+            throw new ResourceNotFoundException("El ID de usuario es obligatorio para registrar la reserva");
         }
 
         // FASE VI: Verificar usuario remotamente con CB
         UserExternalDto userDto = userServiceClient.getUserById(reserve.getUserId());
-        if (userDto == null || userDto.getName().contains("no disponible")) {
+        if (userDto == null || userDto.getName() == null || userDto.getName().contains("no disponible")) {
             throw new ResourceNotFoundException("Usuario con el ID " + reserve.getUserId() + " no encontrado o servicio no disponible");
+        }
+
+        if (reserve.getBookIds() == null || reserve.getBookIds().isEmpty()) {
+            throw new BookNotAvailableException("Debe incluir al menos un libro disponible para reservar");
+        }
+
+        // Validar límite máximo de 3 libros por reserva
+        if (reserve.getBookIds().size() > 3) {
+            throw new MaxReservationLimitExceededException("No se pueden solicitar más de 3 libros en una misma reserva.");
+        }
+
+        // Validar límite máximo acumulado de 3 libros por usuario
+        List<Reserve> existingReserves = reserveRepository.findAllByUserId(reserve.getUserId());
+        int currentReservedBooksCount = existingReserves.stream()
+                .mapToInt(r -> r.getBookIds() != null ? r.getBookIds().size() : 0)
+                .sum();
+
+        if (currentReservedBooksCount + reserve.getBookIds().size() > 3) {
+            throw new MaxReservationLimitExceededException(
+                    "El usuario ya tiene " + currentReservedBooksCount + " libro(s) reservado(s). " +
+                    "El límite máximo total es de 3 libros por usuario."
+            );
         }
 
         // FASE VI: Verificar libros remotamente con CB
@@ -134,6 +166,9 @@ public class ReserveServiceImpl implements ReserveService {
             oldReserve.setUserId(updatedReserveData.getUserId());
         }
         if (updatedReserveData.getBookIds() != null && !updatedReserveData.getBookIds().isEmpty()) {
+            if (updatedReserveData.getBookIds().size() > 3) {
+                throw new MaxReservationLimitExceededException("No se pueden asociar más de 3 libros a una reserva.");
+            }
             oldReserve.setBookIds(updatedReserveData.getBookIds());
         }
 

@@ -34,13 +34,13 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<User> addUser(UserDto userDto) {
         User user = userMapper.toEntity(userDto);
 
-        if (userRepository.findByUserName(user.getUserName()) != null) {
+        if (userRepository.findByUserNameIgnoreCase(user.getUserName()) != null || userRepository.findByUserName(user.getUserName()) != null) {
             throw new UserAlreadyExistsException("El nombre de usuario '" + user.getUserName() + "' ya está registrado");
         }
-        if (userRepository.findUserByEmail(user.getEmail()) != null) {
+        if (userRepository.findUserByEmailIgnoreCase(user.getEmail()) != null || userRepository.findUserByEmail(user.getEmail()) != null) {
             throw new UserAlreadyExistsException("El correo electrónico '" + user.getEmail() + "' ya está registrado");
         }
-        if (userRepository.findUserByName(user.getName()) != null) {
+        if (userRepository.findUserByNameIgnoreCase(user.getName()) != null || userRepository.findUserByName(user.getName()) != null) {
             throw new UserAlreadyExistsException("El nombre '" + user.getName() + "' ya está registrado");
         }
 
@@ -74,7 +74,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserDto> findUserByName(String name) {
-        User user = userRepository.findUserByName(name);
+        User user = userRepository.findUserByNameIgnoreCase(name);
+        if (user == null) {
+            user = userRepository.findUserByName(name);
+        }
         if (user == null) {
             throw new ResourceNotFoundException("Usuario con el nombre " + name + " no encontrado");
         }
@@ -83,7 +86,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByNameUser(String userName) {
-        User user = userRepository.findByUserName(userName);
+        User user = userRepository.findByUserNameIgnoreCase(userName);
+        if (user == null) {
+            user = userRepository.findByUserName(userName);
+        }
         if (user == null) {
             throw new ResourceNotFoundException("Usuario con el nick " + userName + " no encontrado");
         }
@@ -92,7 +98,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<UserDto> findUserByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmailIgnoreCase(email);
+        if (user == null) {
+            user = userRepository.findUserByEmail(email);
+        }
         if (user == null) {
             throw new ResourceNotFoundException("Usuario con el email " + email + " no encontrado");
         }

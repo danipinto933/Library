@@ -7,9 +7,12 @@ import { useBookModal } from '../../hooks/useBookModal'
 import BookModal from '../../components/bookModal/BookModal'
 import Pagination from '../../components/pagination/Pagination'
 import { usePagination } from '../../hooks/usePagination'
+import LoadingSpinner from '../../components/loadingSpinner/LoadingSpinner'
 
 function Author() {
     const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [topAuthors, setTopAuthors] = useState([]);
     const [selectedAuthor, setSelectedAuthor] = useState(null);
     const [authorBooks, setAuthorBooks] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -20,7 +23,7 @@ function Author() {
         const term = searchTerm.toLowerCase();
         const matchesTitle = book.title?.toLowerCase().includes(term);
         const matchesAuthor = book.author?.toLowerCase().includes(term);
-        const matchesGenre = book.genres?.some(g => g.toLowerCase().includes(term));
+        const matchesGenre = book.genres?.some(g => (typeof g === 'string' ? g : g?.genreName || g?.name || '').toLowerCase().includes(term));
         return matchesTitle || matchesAuthor || matchesGenre;
     });
     const { 
@@ -35,26 +38,72 @@ function Author() {
         let isMounted = true;
         const controller = new AbortController();
 
-        const getAuthors = async () => {
+        const getAuthorsData = async () => {
             try {
-                const response = await axios.get("books", {
+                setLoading(true);
+                const config = {
                     signal: controller.signal,
                     headers: { 'Authorization': token ? `Bearer ${token}` : '' }
-                });
+                };
+
+                const booksRes = await axios.get("books", config);
+                let reservesData = [];
+                try {
+                    const reservesRes = await axios.get("reserves", config);
+                    reservesData = reservesRes.data || [];
+                } catch (resErr) {
+                    console.warn("No se pudieron cargar las reservas para cálculo de demanda de autores:", resErr);
+                }
+
                 if (isMounted) {
-                    setBooks(response.data);
-                    setAuthorBooks(response.data);
+                    const allBooks = booksRes.data || [];
+                    setBooks(allBooks);
+                    setAuthorBooks(allBooks);
+
+                    const authorDemandMap = {};
+                    reservesData.forEach(res => {
+                        if (Array.isArray(res.books)) {
+                            res.books.forEach(b => {
+                                if (b.author) {
+                                    authorDemandMap[b.author] = (authorDemandMap[b.author] || 0) + 1;
+                                }
+                            });
+                        }
+                    });
+
+                    const hasReserveDemand = Object.keys(authorDemandMap).length > 0;
+                    if (!hasReserveDemand) {
+                        allBooks.forEach(b => {
+                            if (b.author) {
+                                authorDemandMap[b.author] = (authorDemandMap[b.author] || 0) + 1;
+                            }
+                        });
+                    }
+
+                    const uniqueAuthorsList = [...new Set(allBooks.map(b => b.author).filter(Boolean))];
+                    uniqueAuthorsList.sort((a, b) => {
+                        const countA = authorDemandMap[a] || 0;
+                        const countB = authorDemandMap[b] || 0;
+                        return countB - countA;
+                    });
+
+                    setTopAuthors(uniqueAuthorsList.slice(0, 5));
                 }
 
             } catch (err) {
-                console.error(err);
+                if (err.name !== 'CanceledError') {
+                    console.error("Error al obtener autores:", err);
+                }
+            } finally {
+                if (isMounted) setLoading(false);
             }
         }
 
-        getAuthors();
+        getAuthorsData();
 
         return () => {
             isMounted = false;
+            controller.abort();
         }
 
     }, [token])
@@ -83,8 +132,6 @@ function Author() {
         };
     }, []);
 
-    const uniqueAuthors = [...new Set(books.map(book => book.author))];
-
     const handleAuthorClick = (author) => {
         setSearchTerm('');
         if (selectedAuthor === author) {
@@ -92,49 +139,55 @@ function Author() {
             setAuthorBooks(books);
         } else {
             setSelectedAuthor(author);
-            setAuthorBooks(books.filter(book => book.author === author));
+            setAuthorBooks(books.filter(book => book.author?.toLowerCase() === author.toLowerCase()));
         }
     }
 
     return (
         <div className="author-page">
             <h1>Autores</h1>
-            <ul className="author-list">
-                {uniqueAuthors.map((authorName, index) => (
-                    <li 
-                        key={index} 
-                        onClick={() => handleAuthorClick(authorName)}
-                        className={selectedAuthor === authorName ? 'active' : ''}
-                    >
-                        {authorName}
-                    </li> 
-                ))}
-            </ul>
-            <div className="search-bar-container">
-              <input
-                type="text"
-                placeholder="🔍 Buscar libros de este autor por título..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="book-search-input"
-              />
-            </div>
-            <div className="books-grid">
-                {paginatedBooks.map((book) => (
-                    <Card 
-                        key={book.id} 
-                        book={book} 
-                        onClick={() => openModal(book)} 
-                    />
-                ))}
-            </div>
+            {loading ? (
+                <LoadingSpinner message="exportando libros..." />
+            ) : (
+                <>
+                    <ul className="author-list">
+                        {topAuthors.map((authorName, index) => (
+                            <li 
+                                key={index} 
+                                onClick={() => handleAuthorClick(authorName)}
+                                className={selectedAuthor === authorName ? 'active' : ''}
+                            >
+                                {authorName}
+                            </li> 
+                        ))}
+                    </ul>
+                    <div className="search-bar-container">
+                      <input
+                        type="text"
+                        placeholder="🔍 Buscar libros de este autor por título..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="book-search-input"
+                      />
+                    </div>
+                    <div className="books-grid">
+                        {paginatedBooks.map((book) => (
+                            <Card 
+                                key={book.id} 
+                                book={book} 
+                                onClick={() => openModal(book)} 
+                            />
+                        ))}
+                    </div>
 
-            <Pagination 
-                currentPage={currentPage}
-                totalPages={totalPages}
-                prevPage={prevPage}
-                nextPage={nextPage}
-            />
+                    <Pagination 
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        prevPage={prevPage}
+                        nextPage={nextPage}
+                    />
+                </>
+            )}
 
             <BookModal 
                 isOpen={isOpen} 

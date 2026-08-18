@@ -62,7 +62,6 @@ const Login = ({ onLoginSuccess }) => {
             };
 
             setAuth(safeUserData);
-            console.log(safeUserData);
 
             localStorage.setItem('user_session', JSON.stringify(safeUserData));
 

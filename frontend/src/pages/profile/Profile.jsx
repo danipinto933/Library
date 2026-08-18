@@ -114,7 +114,6 @@ const Profile = () => {
             <div className="profile-header">
                 <h2>Mi Perfil</h2>
                 <div className="user-info">
-                    <p>{console.log("datos del usuario: "+user)}</p>
                     <p><strong>Usuario:</strong> {auth.userName}</p>
                     <p><strong>Email:</strong> {auth.email}</p>
                 </div>

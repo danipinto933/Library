@@ -42,6 +42,12 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.CONFLICT, "Conflict", ex.getMessage());
     }
 
+    @ExceptionHandler(MaxReservationLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxReservationLimitExceededException(MaxReservationLimitExceededException ex) {
+        log.error("MaxReservationLimitExceededException: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.CONFLICT, "Conflict", ex.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();

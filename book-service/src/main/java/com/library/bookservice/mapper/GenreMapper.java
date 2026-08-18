@@ -3,6 +3,7 @@ package com.library.bookservice.mapper;
 import com.library.bookservice.dto.GenreDto;
 import com.library.bookservice.model.Genre;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
@@ -12,5 +13,6 @@ public interface GenreMapper {
 
     Genre toEntity(GenreDto genreDto);
 
+    @Mapping(target = "id", ignore = true)
     void updateEntityFromDto(GenreDto dto, @MappingTarget Genre genre);
 }

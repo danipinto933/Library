@@ -10,8 +10,7 @@ spring:
     config:
       server:
         native:
-          # Apunta a la carpeta config-repo en el directorio raíz del proyecto
-          search-locations: file:../config-repo
+          search-locations: file:/config-repo,file:../config-repo,file:./config-repo
 
 management:
   endpoints:

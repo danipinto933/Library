@@ -1,10 +1,10 @@
 FROM eclipse-temurin:17-jdk-alpine as builder
 WORKDIR /app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-    RUN chmod +x ./mvnw
+COPY user-service/.mvn/ .mvn
+COPY user-service/mvnw user-service/pom.xml ./
+RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline
-COPY src ./src
+COPY user-service/src ./src
 RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine

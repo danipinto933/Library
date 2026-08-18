@@ -1,14 +1,15 @@
 FROM eclipse-temurin:17-jdk-alpine as builder
 WORKDIR /app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-    RUN chmod +x ./mvnw
+COPY config-server/.mvn/ .mvn
+COPY config-server/mvnw config-server/pom.xml ./
+RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline
-COPY src ./src
+COPY config-server/src ./src
 RUN ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
+COPY config-repo /config-repo
 EXPOSE 8888
 ENTRYPOINT ["java", "-jar", "app.jar"]

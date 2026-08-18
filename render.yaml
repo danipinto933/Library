@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: library-config-server
+    env: docker
+    dockerfilePath: ./config-server/Dockerfile
+    dockerContext: .
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: native

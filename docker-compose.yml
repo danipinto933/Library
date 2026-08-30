@@ -123,6 +123,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME:-postgres}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-postgres}
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - JAVA_OPTS=-Xms128m -Xmx256m
 
     volumes:
       - ./book-service/uploads:/app/uploads

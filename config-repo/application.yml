@@ -5,8 +5,15 @@ eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:http://localhost:8761/eureka/}
+    eureka-server-connect-timeout-seconds: 5
+    eureka-server-read-timeout-seconds: 8
+    healthcheck:
+      enabled: true
   instance:
     prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address:${random.value}}:${server.port}
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 30
 
 spring:
   kafka:
@@ -23,4 +30,6 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+        reconnect.backoff.ms: 1000
+        reconnect.backoff.max.ms: 10000
 
